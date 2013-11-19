@@ -10,7 +10,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import fhws.masterarbeit.botnetz.data.ClientList;
+import fhws.masterarbeit.botnetz.data.SessionMonitor;
 import fhws.masterarbeit.botnetz.data.MyObserver;
 import fhws.masterarbeit.botnetz.data.SessionListEncoder;
 
@@ -19,27 +19,34 @@ import fhws.masterarbeit.botnetz.data.SessionListEncoder;
 public class BotnetzServerWebsocket implements MyObserver
 {
 	private Session session;
-	private ClientList clientList;
+	private SessionMonitor sessionMonitor;
 	
 	@OnOpen
-	public void open(Session session)
+	public void onOpen(Session session)
 	{
 		this.session = session;
-		clientList = ClientList.getClientList();
-		clientList.addObserver(this);
-	}
+		sessionMonitor = SessionMonitor.getSessionMonitor();
+		sessionMonitor.addObserver(this);
+	}//end method onOpen
 	
 	@OnMessage
 	public void onMessage(String message)
-	{
-		
-	}
+	{	
+	}//end method onMessage
 	
 	@OnClose
-	public void close()
+	public void onClose()
 	{
-		clientList.removeObserver(this);
-	}
+		sessionMonitor.removeObserver(this);
+		try 
+		{
+			session.close();
+		}//end try 
+		catch (IOException e) 
+		{
+			System.out.println("IOException" + e.getStackTrace());
+		}//end catch IOException
+	}//end method onClose
 
 	@Override
 	public void onUpdate(HashMap<String, Session> sessionList)
@@ -47,14 +54,14 @@ public class BotnetzServerWebsocket implements MyObserver
 		try 
 		{
 			this.session.getBasicRemote().sendObject(sessionList);
-		}
+		}//end try
 		catch (EncodeException e) 
 		{
 			System.out.println("EncodeException: " + e.getStackTrace());
-		} 
+		}//end catch EncodeException
 		catch (IOException ioe) 
 		{
 			System.out.println("IOException: " + ioe.getStackTrace());
-		}
-	}
-}
+		}//end catch IOException
+	}//end method onUpdate
+}//end class BotnetzServerWebsocket

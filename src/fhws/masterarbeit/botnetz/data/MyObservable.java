@@ -11,4 +11,4 @@ public interface MyObservable
 	public void notifyObservers(HashMap<String, Session> sessionList);
 	public void addObserver(MyObserver myObserver);
 	public void removeObserver(MyObserver myObserver);
-}
+}//end interface MyObservable

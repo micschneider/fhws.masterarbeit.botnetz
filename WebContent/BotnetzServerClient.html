@@ -13,49 +13,58 @@
 			botnetzWs = new WebSocket(wsUri);
 			output = document.getElementById("div_output");
 			
-			botnetzWs.onopen = function(){
-											writeToScreen("Connected");
-										 };
-			botnetzWs.onmessage = function(evt){
-													var jsonArr = JSON.parse(evt.data);
-													writeToScreen(convertJSONArr(jsonArr));
-											   };
-			botnetzWs.onerror = function(evt){
-												writeToScreen("ERROR: " + evt.data);
-											 };
-		}
+			botnetzWs.onopen = function()
+							   {
+									writeToScreen("Connected");
+							   }; //end function
+			botnetzWs.onmessage = function(evt)
+								  {
+										writeToScreen(convertJSONArr(evt.data));
+							      }; //end function
+			botnetzWs.onerror = function(evt)
+								{
+									writeToScreen("ERROR: " + evt.data);
+								};//end function
+		}//end function init
 		
-		function convertJSONArr(jsonArr)
+		function convertJSONArr(data)
 		{
-		    var jsonOutput = "<table style='border:solid 1px #000000' cellpadding=3>";
+			var jsonArr = JSON.parse(data);
+			var jsonOutput = "<table style='border:solid 1px #000000' cellpadding=3>";
 		    jsonOutput += "<tr>";
 		    jsonOutput += "<th>Laufende Nummer</th>";
 		    jsonOutput += "<th>Client Session ID</th>";
 		    jsonOutput += "</tr>";
-		    var zaehler = 1;
 		    
 		    for (var i in jsonArr)
 		    {
 		    	jsonOutput += "<tr>";
 		    	jsonOutput += "<td>";
-		    	jsonOutput += zaehler;
+		    	jsonOutput += jsonArr[i].nr;
 		    	jsonOutput += "</td>";
 		    	jsonOutput += "<td>";
 		    	jsonOutput += jsonArr[i].id;
 		    	jsonOutput += "</td>";
 		    	jsonOutput += "</tr>";
-		    	zaehler++;
-		    }
+		    }//end for
+		    
 		    jsonOutput += "</table>";
+		    
 		    return jsonOutput;
-		}
+		}//end function convertJSONArray
 		
 		function writeToScreen(message)
 		{
 			output.innerHTML = message;
-		}
+		}//end function writeToScreen
+		
+		function close()
+		{
+			botnetzWs.close();
+		}//end function close
 		
 		window.addEventListener("load", init, false);
+		window.addEventListener("unload", close, false);
 	</script>
 </head>
 <body>
