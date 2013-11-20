@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Botnetz-Server</title>
+	<title>Botnetz-Manager</title>
 	<script type="text/javascript">
 		var botnetzWs = null;
 		var output = null;
@@ -63,6 +63,12 @@
 			botnetzWs.close();
 		}//end function close
 		
+		function sendText()
+		{
+			text_toSend = document.getElementById("text_toSend").value;
+			botnetzWs.send(text_toSend);
+		}//end function sendText
+		
 		window.addEventListener("load", init, false);
 		window.addEventListener("unload", close, false);
 	</script>
@@ -70,5 +76,10 @@
 <body>
 	<div id="div_output">
 	</div>
+	<textarea id="text_toSend" cols="50" rows="10">
+	</textarea>
+	<form>
+		<input type="button" value="Senden" id="button_send" onclick="sendText()">
+	</form>
 </body>
 </html>

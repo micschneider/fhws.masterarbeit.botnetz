@@ -10,13 +10,13 @@
 	
 		function init()
 		{
-			var wsUri = "ws://localhost:8080/fhws.masterarbeit.botnetz/botnetz";
+			var wsUri = "ws://192.168.0.100:8080/fhws.masterarbeit.botnetz/botnetz";
 			botnetzWs = new WebSocket(wsUri);
 			output = document.getElementById("div_output");
 			
 			botnetzWs.onopen = function()
 							   {
-									writeToScreen("Connected");
+									writeToScreen("Connected! Waiting for instructions...");
 							   }; // end function
 			botnetzWs.onmessage = function(evt)
 								  {
@@ -28,17 +28,9 @@
 								}; //end function
 		}//end function init
 		
-		function sendText()
-		{
-			text_toSend = document.getElementById("text_toSend").value;
-			botnetzWs.send(text_toSend);
-			writeToScreen("Sent this: " + text_toSend);
-		}//end function sendText
-		
 		function writeToScreen(message)
 		{
-			var pre = document.createElement("p");
-		    pre.style.wordWrap = "break-word";
+			var pre = document.createElement("h1");
 		    pre.innerHTML = message;
 		    output.appendChild(pre);
 		}//end function writeToScreen
@@ -53,10 +45,6 @@
 	</script>
 </head>
 <body>
-	<form>
-		<input type="text" id="text_toSend">
-		<input type="button" value="Senden" id="button_send" onclick="sendText()">
-	</form>
 	<div id="div_output">
 	</div>
 </body>

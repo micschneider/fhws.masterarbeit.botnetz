@@ -9,52 +9,54 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import fhws.masterarbeit.botnetz.data.SessionMonitor;
+import fhws.masterarbeit.botnetz.controller.WorkerController;
 
 @ServerEndpoint("/botnetz")
-public class BotnetzClientWebsocket 
+public class BotnetzWorkerWebsocket
 {
 	private Session session;
-	private SessionMonitor sessionMonitor;
+	private static WorkerController controller;
 	
 	@OnOpen
 	public void onOpen(Session session)
 	{
 		this.session = session;
-		this.sessionMonitor = SessionMonitor.getSessionMonitor();
-		this.sessionMonitor.addSession(this.session);
+		controller = WorkerController.getController();
+		controller.sessionAdded(session);
 	}//end method onOpen
 	
 	@OnMessage
 	public void onMessage(String message)
 	{
-		try 
-		{
-			session.getBasicRemote().sendText("alert('" + message + "')");
-		}//end try 
-		catch (IOException e) 
-		{
-			System.out.println("IOException: " + e.getStackTrace());
-		}//end catch IOException
+		controller.handleTextMessage(message);
 	}//end method onMessage
 	
 	@OnError
-	public void onError(Throwable t)
+	public void onError(Throwable throwable)
 	{
-		System.out.println("Exception: " + t.getStackTrace() + t.getCause());
+		controller.handleError(throwable);
 	}//end method onError
 	
 	@OnClose
 	public void onClose()
 	{
-		sessionMonitor.removeSession(this.session);
+		controller.sessionRemoved(this.session);
+	}//end method onClose
+	
+	public static void sendJavaScript(Session session, String code)
+	{
 		try 
 		{
-			session.close();
+			session.getBasicRemote().sendText(code);
 		}//end try
 		catch (IOException e) 
 		{
-			System.out.println("IOException" + e.getStackTrace());
+			controller.handleError(e);
 		}//end catch IOException
-	}//end method onClose
+	}//end method sendJavaScript
+
+	public static void closeSession(Session session) throws IOException 
+	{
+		session.close();
+	}//end method closeSession
 }//end class BotnetzClientWebsocket

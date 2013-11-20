@@ -1,4 +1,4 @@
-package fhws.masterarbeit.botnetz.data;
+package fhws.masterarbeit.botnetz.model;
 
 import java.util.HashMap;
 import java.util.Iterator;
